@@ -19,8 +19,8 @@ function createCart() {
     const newCart = {
         id: newId,
         products: []
-    };
-    carts.push(newCart);
+    }
+    carts.push(newCart)
     fs.writeFileSync(pathCarts, JSON.stringify(carts, null, 2))
     return newCart
 }
