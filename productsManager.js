@@ -14,9 +14,11 @@ function getProductById(pid) {
 }
 
 function addProduct(product) {
-    const products = getProducts();
-    products.push(product);
-    fs.writeFileSync(pathProducts, JSON.stringify(products))
+    const products = getProducts()
+    const newId = products.length > 0 ? products[products.length - 1].id + 1 : 1
+    product.id = newId
+    products.push(product)
+    fs.writeFileSync(pathProducts, JSON.stringify(products, null, 2))
 }
 
 function updateProduct(pid, updated) {
@@ -26,9 +28,10 @@ function updateProduct(pid, updated) {
 }
 
 function deleteProduct(pid) {
-    let products = getProducts();
-    products = products.filter(product => product.id !== pid)
-    fs.writeFileSync(pathProducts, JSON.stringify(products))
+    let products = getProducts()
+    const idToDelete = Number(pid)
+    products = products.filter(product => product.id !== idToDelete)
+    fs.writeFileSync(pathProducts, JSON.stringify(products, null, 2))
 }
 
 module.exports = {
