@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express')
 const ProductManager = require('../productsManager')
 
 const router = express.Router()

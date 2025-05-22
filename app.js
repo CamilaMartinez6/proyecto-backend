@@ -1,4 +1,6 @@
 const viewsRouter = require('./routes/views.router.js')
+const cartsRouter = require('./routes/carts.router.js')
+const productsRouter = require('./routes/products.router.js')
 
 const express = require('express')
 const path = require('path')
@@ -8,10 +10,16 @@ const exphbs = require('express-handlebars')
 
 const productsManager = require('./productsManager.js')
 const cartManager = require('./cartManager.js')
+const { default: mongoose } = require('mongoose')
 
 const app = express()
 const httpServer = app.listen(8080, () => console.log ("funcionando en 8080"))
 const io = new Server(httpServer)
+
+mongoose.connect('mongodb+srv://camilamacarenamartinez6:GU5zX6GNDnEB12Tg@camicluster.in8pzsu.mongodb.net/')
+ .then(()=> {
+    console.log('bd conectada')
+ })
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -32,11 +40,13 @@ app.get('/realtimeproducts', (req, res) => {
 })
 
 app.use('/', viewsRouter);
+app.use('/api/products', productsRouter)
+app.use('/api/carts', cartsRouter)
 
 io.on('connection', socket => {
     console.log('conectado')
 
-    socket.emit('updateProducts', productsManager.getProducts());
+    socket.emit('updateProducts', productsManager.getProducts())
 
     socket.on('addProduct', product => {
         productsManager.addProduct(product)

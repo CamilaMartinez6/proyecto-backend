@@ -1,0 +1,30 @@
+{{> header }}
+
+<h1>Carrito ID: {{cartId}}</h1>
+
+{{#if products.length}}
+  <table>
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each products}}
+        <tr>
+          <td>{{title}}</td>
+          <td>${{price}}</td>
+          <td>{{quantity}}</td>
+          <td>${{total}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>Este carrito no tiene productos.</p>
+{{/if}}
+
+<a href="/products">Volver a productos</a>
