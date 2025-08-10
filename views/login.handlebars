@@ -1,0 +1,68 @@
+<h1>Registrarse</h1>
+<form id="registerForm">
+    <input type="text" name="first_name" placeholder="nombre" required>
+    <input type="text" name="last_name" placeholder="apellido" required>
+    <input type="email" name="email" placeholder="correo electronico" required>
+    <input type="number" name="age" placeholder="edad" required>
+    <input type="password" name="password" placeholder="contraseña" required>
+    <button type="submit">registrarse</button>
+</form>
+
+<h1>Iniciar Sesión</h1>
+<form id="loginForm">
+    <input type="email" name="email" placeholder="Correo" required>
+    <input type="password" name="password" placeholder="Contraseña" required>
+    <button type="submit">iniciar sesión</button>
+</form>
+
+<button id="checkUser">ver mi usuario</button>
+
+<script>
+    const baseUrl = "/api/sessions"
+
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+        e.preventDefault()
+        const data = Object.fromEntries(new FormData(e.target))
+
+        const res = await fetch(`${baseUrl}/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+
+        const result = await res.json()
+        alert(result.message || "registrado exitosamente")
+    })
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+        e.preventDefault()
+        const data = Object.fromEntries(new FormData(e.target));
+
+        const res = await fetch(`${baseUrl}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+
+        const result = await res.json()
+        if (result.token) {
+            localStorage.setItem("token", result.token)
+            alert("sesión iniciada")
+        } else {
+            alert("error al iniciar sesión")
+        }
+    })
+
+    document.getElementById("checkUser").addEventListener("click", async () => {
+        const token = localStorage.getItem("token")
+        if (!token) return alert("no hay sesión iniciada")
+
+        const res = await fetch(`${baseUrl}/current`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        })
+
+        const result = await res.json()
+        console.log(result)
+        alert(JSON.stringify(result))
+    })
+</script>

@@ -1,12 +1,15 @@
 const viewsRouter = require('./routes/views.router.js')
 const cartsRouter = require('./routes/carts.router.js')
 const productsRouter = require('./routes/products.router.js')
+const sessionsRouter = require('./routes/sessions.router.js')
 
 const express = require('express')
 const path = require('path')
 const http = require('http')
 const { Server } = require('socket.io')
 const exphbs = require('express-handlebars')
+const passport = require('passport');
+const { iniciarPassport } = require('./config/passport.config.js')
 
 const productsManager = require('./productsManager.js')
 const cartManager = require('./cartManager.js')
@@ -16,7 +19,7 @@ const app = express()
 const httpServer = app.listen(8080, () => console.log ("funcionando en 8080"))
 const io = new Server(httpServer)
 
-mongoose.connect('mongodb+srv://camilamacarenamartinez6:GU5zX6GNDnEB12Tg@camicluster.in8pzsu.mongodb.net/')
+mongoose.connect('mongodb+srv://camilamacarenamartinez6:GU5zX6GNDnEB12Tg@camicluster.in8pzsu.mongodb.net/Usuarios?retryWrites=true&w=majority')
  .then(()=> {
     console.log('bd conectada')
  })
@@ -24,6 +27,9 @@ mongoose.connect('mongodb+srv://camilamacarenamartinez6:GU5zX6GNDnEB12Tg@camiclu
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public')))
+
+iniciarPassport()
+app.use(passport.initialize())
 
 app.engine('handlebars', exphbs.engine())
 app.set('view engine', 'handlebars')
@@ -39,9 +45,10 @@ app.get('/realtimeproducts', (req, res) => {
     res.render('realTimeProducts', { products })
 })
 
-app.use('/', viewsRouter);
+app.use('/', viewsRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
+app.use('/api/sessions', sessionsRouter)
 
 io.on('connection', socket => {
     console.log('conectado')

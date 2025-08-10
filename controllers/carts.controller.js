@@ -3,7 +3,7 @@ const CartModel = require('../models/Cart.model.js')
 const createCart = async (req, res) => {
   const newCart = await CartModel.create({})
   res.status(201).json({ status: 'success', cart: newCart })
-};
+}
 
 const getCartById = async (req, res) => {
   const { cid } = req.params

@@ -10,12 +10,11 @@ const productSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
-  code: {
-    type: String,
+  id: {
+    type: Number,
     unique: true,
   },
   stock: Number,
-  thumbnails: [String]
 })
 
 productSchema.plugin(mongoosePaginate)
