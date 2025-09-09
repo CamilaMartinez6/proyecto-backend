@@ -1,9 +1,9 @@
-const express = require('express')
-const router = express.Router()
-const cartController = require('../controllers/carts.controller.js')
+const express = require('express');
+const { current } = require('../middlewares/auth');
+const { authorize } = require('../middlewares/authorization');
 
-router.post('/', cartController.createCart)
-router.get('/:cid', cartController.getCartById)
-router.post('/:cid/products/:pid', cartController.addProductToCart)
+const router = express.Router();
 
-module.exports = router
+router.post('/:cid/products/:pid', current, authorize('user'), (req,res)=>{});
+
+module.exports = router;

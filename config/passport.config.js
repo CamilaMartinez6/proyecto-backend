@@ -5,7 +5,7 @@ const User = require("../models/User")
 const { crearHash, contrasenaValida } = require("../utils/hash")
 const jwt = require("jsonwebtoken")
 
-const LocalStrategy = local.Strategy;
+const LocalStrategy = local.Strategy
 
 const iniciarPassport = () => {
 
@@ -24,7 +24,7 @@ const iniciarPassport = () => {
           age,
           password: crearHash(password)
         });
-        console.log('Usuario creado:', newUser);
+        console.log('Usuario creado:', newUser)
         return done(null, newUser)
       } catch (err) {
         return done(err)

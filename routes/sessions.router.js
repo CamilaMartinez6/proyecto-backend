@@ -1,31 +1,20 @@
-const express = require("express")
-const passport = require("passport")
-const jwt = require("jsonwebtoken")
+const express = require('express');
+const passport = require('passport');
+const { current, login, forgotPassword, getResetPassword, postResetPassword } = require('../controllers/sessions.controller');
 
-const router = express.Router()
+const router = express.Router();
 
-router.post("/register", passport.authenticate("register", { session: false }), (req, res) => {
-  res.json({ status: "success", message: "Usuario registrado" })
-})
+router.post('/register', passport.authenticate('register', { session:false }), (req, res)=> {
+  res.json({ status:'success', message:'Usuario registrado' });
+});
 
-router.post("/login", passport.authenticate("login", { session: false }), (req, res) => {
-  const user = req.user
+router.post('/login', passport.authenticate('login', { session:false }), login);
 
-  const token = jwt.sign(
-    { id: user._id, email: user.email, role: user.role },
-    process.env.JWT_SECRET || "jwt_secret_key",
-    { expiresIn: "1h" }
-  )
+router.get('/current', passport.authenticate('jwt', { session:false }), current);
 
-  res.json({ status: "success", token })
-})
+router.post('/forgot-password', forgotPassword);
+router.get('/reset-password', getResetPassword);
+router.post('/reset-password', postResetPassword);
 
-router.get(
-  "/current",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.json({ status: "success", user: req.user })
-  }
-)
+module.exports = router;
 
-module.exports = router
